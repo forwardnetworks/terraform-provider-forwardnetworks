@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "Model and verify networks",
-    "version": "23.2.2",
+    "version": "23.3.0",
     "title": "Forward Networks: Complete API",
     "contact": {
       "email": "support@forwardnetworks.com"
@@ -3441,7 +3441,7 @@
           "Network Locations"
         ],
         "summary": "Creates or updates network locations",
-        "description": "Any patches that specify an `id` or an existing location’s `name` (ignoring case) will update the existing location. Any other patches will each create a new location. Patches are applied sequentially.",
+        "description": "Any patches that specify an existing location’s `id` or `name` (ignoring case) will update the existing location. Any other patches will each create a new location. Patches are applied sequentially.\n\n**Note**: Matching by `name` is deprecated and will be removed in release 23.6.",
         "operationId": "patchLocationsUsingPATCH",
         "consumes": [
           "application/json"
@@ -5636,7 +5636,7 @@
           {
             "name": "intent",
             "in": "query",
-            "description": "Specifies the intent for the search. Default PREFER_DELIVERED.\n*PREFER_VIOLATIONS*: Prefer paths that result in the traffic not getting delivered, e.g. drops, blackholes, loops. An example usage is while trying to evaluate if the specified traffic always gets delivered to the destination along all path choices.\n*PREFER_DELIVERED*: Prefer paths that result in the traffic getting delivered. An example usage is while trying to evaluate if traffic gets delivered to the destination along any path choice.\n*VIOLATIONS_ONLY*: Search for paths where traffic is not delivered to the destination.\n*SINGLE_BEST*: (Deprecated) Same as \"PREFER_DELIVERED\" with a maximum of 1 result\nand 0 or 1 return path results.",
+            "description": "Specifies the intent for the search. Default PREFER_DELIVERED.\n*PREFER_VIOLATIONS*: Prefer paths that result in the traffic not getting delivered, e.g. drops, blackholes, loops. An example usage is while trying to evaluate if the specified traffic always gets delivered to the destination along all path choices.\n*PREFER_DELIVERED*: Prefer paths that result in the traffic getting delivered. An example usage is while trying to evaluate if traffic gets delivered to the destination along any path choice.\n*VIOLATIONS_ONLY*: Search for paths where traffic is not delivered to the destination.",
             "required": false,
             "type": "string",
             "default": "PREFER_DELIVERED",
@@ -5644,8 +5644,7 @@
             "enum": [
               "PREFER_VIOLATIONS",
               "PREFER_DELIVERED",
-              "VIOLATIONS_ONLY",
-              "SINGLE_BEST"
+              "VIOLATIONS_ONLY"
             ]
           },
           {
@@ -6980,6 +6979,7 @@
             "FORCEPOINT",
             "BLUECAT",
             "NOKIA",
+            "VERSA",
             "BROCADE",
             "FORWARD_CUSTOM"
           ]
@@ -7080,6 +7080,7 @@
             "viasat_encryptor",
             "bluecat",
             "nokia",
+            "versa_sase",
             "brocade_switch"
           ]
         },
@@ -7158,7 +7159,8 @@
             "OPERATION_TIMED_OUT",
             "CERTIFICATE_CHECK_FAILED",
             "DEVICE_IN_BAD_STATE",
-            "PROJECT_VIEW_PERMISSION_MISSING"
+            "PROJECT_VIEW_PERMISSION_MISSING",
+            "NO_SPACE_LEFT_ON_DEVICE"
           ]
         },
         "processingError": {
@@ -7525,6 +7527,7 @@
             "bluecat_https",
             "nokia_ssh",
             "brocade_switch_ssh",
+            "versa_director_ssh",
             "unknown"
           ]
         },
@@ -7728,6 +7731,7 @@
             "bluecat_https",
             "nokia_ssh",
             "brocade_switch_ssh",
+            "versa_director_ssh",
             "unknown"
           ]
         },
@@ -8668,17 +8672,6 @@
             "CISCO_IOS",
             "JUNOS"
           ]
-        },
-        "telnetCommandFormat": {
-          "type": "string",
-          "example": "CISCO_CONNECT",
-          "description": "**Deprecated**. Use `commandFormat` instead. Will be removed in release 23.3.",
-          "enum": [
-            "NONE",
-            "UNIX",
-            "CISCO_CONNECT",
-            "JUNOS"
-          ]
         }
       },
       "title": "JumpServer"
@@ -8706,16 +8699,6 @@
         "supportsPortForwarding": {
           "type": "boolean",
           "example": false
-        },
-        "telnetCommandFormat": {
-          "type": "string",
-          "example": "CISCO_CONNECT",
-          "enum": [
-            "NONE",
-            "UNIX",
-            "CISCO_CONNECT",
-            "JUNOS"
-          ]
         },
         "commandFormat": {
           "type": "string",
@@ -9030,7 +9013,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "56"
+          "example": "dyt-a"
         },
         "name": {
           "type": "string",
@@ -9071,7 +9054,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "56",
+          "example": "dyt-a",
           "description": "Identifier of the location to update. Required if `name` is absent."
         },
         "name": {
@@ -9107,7 +9090,8 @@
           "description": "Name of the country that `city` is located in (for display purposes only)"
         }
       },
-      "title": "LocationBulkPatch"
+      "title": "LocationBulkPatch",
+      "description": "**Note:** Deprecated for removal in release 23.6. LocationPatch will be reused for bulk updates instead."
     },
     "LocationFilter": {
       "type": "object",
@@ -9139,6 +9123,10 @@
     "LocationPatch": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "example": "dyt-a"
+        },
         "name": {
           "type": "string",
           "example": "Dayton DC"
@@ -9264,6 +9252,7 @@
             "bluecat_https",
             "nokia_ssh",
             "brocade_switch_ssh",
+            "versa_director_ssh",
             "unknown"
           ]
         },
@@ -9346,6 +9335,7 @@
               "bluecat_https",
               "nokia_ssh",
               "brocade_switch_ssh",
+              "versa_director_ssh",
               "unknown"
             ]
           }
@@ -9653,6 +9643,11 @@
         "orgId": {
           "type": "string"
         },
+        "creator": {
+          "type": "string",
+          "example": "mary",
+          "description": "The username of the user who created the network, or null if the account was deleted"
+        },
         "creatorId": {
           "type": "string",
           "example": "123",
@@ -9696,6 +9691,11 @@
         "name"
       ],
       "properties": {
+        "id": {
+          "type": "string",
+          "example": "dyt-a",
+          "description": "If absent or null, a numeric identifier will be assigned"
+        },
         "name": {
           "type": "string",
           "example": "Dayton DC"
@@ -10297,12 +10297,11 @@
         "intent": {
           "type": "string",
           "example": "PREFER_DELIVERED",
-          "description": "Specifies the intent for the search. Default PREFER_DELIVERED.\n*PREFER_VIOLATIONS*: Prefer paths that result in the traffic not getting delivered, e.g. drops, blackholes, loops. An example usage is while trying to evaluate if the specified traffic always gets delivered to the destination along all path choices.\n*PREFER_DELIVERED*: Prefer paths that result in the traffic getting delivered. An example usage is while trying to evaluate if traffic gets delivered to the destination along any path choice.\n*VIOLATIONS_ONLY*: Search for paths where traffic is not delivered to the destination.\n*SINGLE_BEST*: (Deprecated) Same as \"PREFER_DELIVERED\" with a maximum of 1 result\nand 0 or 1 return path results.",
+          "description": "Specifies the intent for the search. Default PREFER_DELIVERED.\n*PREFER_VIOLATIONS*: Prefer paths that result in the traffic not getting delivered, e.g. drops, blackholes, loops. An example usage is while trying to evaluate if the specified traffic always gets delivered to the destination along all path choices.\n*PREFER_DELIVERED*: Prefer paths that result in the traffic getting delivered. An example usage is while trying to evaluate if traffic gets delivered to the destination along any path choice.\n*VIOLATIONS_ONLY*: Search for paths where traffic is not delivered to the destination.",
           "enum": [
             "PREFER_VIOLATIONS",
             "PREFER_DELIVERED",
-            "VIOLATIONS_ONLY",
-            "SINGLE_BEST"
+            "VIOLATIONS_ONLY"
           ]
         },
         "maxCandidates": {
@@ -11248,6 +11247,7 @@
             "FORCEPOINT",
             "BLUECAT",
             "NOKIA",
+            "VERSA",
             "BROCADE",
             "FORWARD_CUSTOM"
           ]
@@ -11343,6 +11343,7 @@
             "viasat_encryptor",
             "bluecat",
             "nokia",
+            "versa_sase",
             "brocade_switch"
           ]
         },
