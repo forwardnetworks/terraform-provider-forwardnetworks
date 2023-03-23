@@ -58,3 +58,39 @@ func (c *ForwardNetworksClient) GetVersion() (string, error) {
 	return versionData.Version, nil
 }
 
+func (c *ForwardNetworksClient) GetOrgId() (string, error) {
+    url := fmt.Sprintf("%s/api/orgs/current", c.BaseURL)
+
+    req, err := http.NewRequest(http.MethodGet, url, nil)
+    if err != nil {
+        return "", err
+    }
+
+    req.SetBasicAuth(c.Username, c.Password)
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return "", err
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != http.StatusOK {
+        return "", fmt.Errorf("API request failed with status code %d", resp.StatusCode)
+    }
+
+    bodyBytes, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return "", err
+    }
+
+    var orgData struct {
+        OrgId string `json:"orgId"`
+    }
+    err = json.Unmarshal(bodyBytes, &orgData)
+    if err != nil {
+        return "", err
+    }
+
+    return orgData.OrgId, nil
+}
