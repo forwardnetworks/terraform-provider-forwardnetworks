@@ -5,7 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"github.com/forwardnetworks/terraform-provider-forwardnetworks/forwardnetworks"
+	"terraform-provider-forwardnetworks/forwardnetworks"
 )
 
 func Provider() *schema.Provider {
