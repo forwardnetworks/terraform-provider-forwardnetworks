@@ -26,10 +26,6 @@ func dataSourceCloud() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
 						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -53,6 +49,30 @@ func dataSourceCloud() *schema.Resource {
 						"assume_role_infos": {
 							Type:     schema.TypeString,
 							Computed: true,
+						},
+						"subscriptions": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"subscription_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"environment": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"enabled": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+									"test_result": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -98,6 +118,31 @@ func dataSourceCloudRead(ctx context.Context, d *schema.ResourceData, meta inter
 		if account.AssumeRoleInfos != nil {
 			assumeRoleInfosJSON, _ := json.Marshal(account.AssumeRoleInfos)
 			accountMap["assume_role_infos"] = string(assumeRoleInfosJSON)
+		}
+
+		// Add the "subscriptions" field processing here
+		if account.Subscriptions != nil {
+			subscriptionsList := make([]map[string]interface{}, len(account.Subscriptions))
+			for j, subscription := range account.Subscriptions {
+				subscriptionMap := make(map[string]interface{})
+				subscriptionData := subscription.(map[string]interface{})
+
+				if subscriptionId, ok := subscriptionData["subscriptionId"]; ok {
+					subscriptionMap["subscription_id"] = subscriptionId
+				}
+				if environment, ok := subscriptionData["environment"]; ok {
+					subscriptionMap["environment"] = environment
+				}
+				if enabled, ok := subscriptionData["enabled"]; ok {
+					subscriptionMap["enabled"] = enabled
+				}
+				if testResult, ok := subscriptionData["testResult"]; ok {
+					testResultJSON, _ := json.Marshal(testResult)
+					subscriptionMap["test_result"] = string(testResultJSON)
+				}
+				subscriptionsList[j] = subscriptionMap
+			}
+			accountMap["subscriptions"] = subscriptionsList
 		}
 
 		accounts[i] = accountMap
