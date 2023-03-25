@@ -8,12 +8,13 @@ import (
 )
 
 type CloudAccount struct {
-	Name               string                 `json:"name"`
-	Type               string                 `json:"type"`
-	Collect            bool                   `json:"collect"`
-	NumVirtualizedDevices int                  `json:"numVirtualizedDevices"`
-	Regions            map[string]interface{} `json:"regions"`
-	AssumeRoleInfos    []interface{}          `json:"assumeRoleInfos,omitempty"`
+	Name                  string                 `json:"name"`
+	Type                  string                 `json:"type"`
+	Collect               bool                   `json:"collect"`
+	NumVirtualizedDevices int                    `json:"numVirtualizedDevices"`
+	Regions               map[string]interface{} `json:"regions,omitempty"`
+	AssumeRoleInfos       []interface{}          `json:"assumeRoleInfos,omitempty"`
+	Subscriptions         []interface{}          `json:"subscriptions,omitempty"`
 }
 
 func (c *ForwardNetworksClient) ListCloudAccounts(networkID string) ([]*CloudAccount, error) {
