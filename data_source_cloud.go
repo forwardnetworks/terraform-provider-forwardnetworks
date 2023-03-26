@@ -17,6 +17,10 @@ func dataSourceCloudAccounts() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"account_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"cloud_accounts": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -102,8 +106,9 @@ func dataSourceCloudAccountsRead(ctx context.Context, d *schema.ResourceData, me
 	client := meta.(*forwardnetworks.ForwardNetworksClient)
 
 	networkId := d.Get("network_id").(string)
+	accountName := d.Get("account_name").(string)
 
-	cloudAccounts, err := client.GetCloudAccounts(networkId)
+	cloudAccounts, err := client.GetCloudAccounts(networkId, accountName)
 	if err != nil {
 		return diag.FromErr(err)
 	}
