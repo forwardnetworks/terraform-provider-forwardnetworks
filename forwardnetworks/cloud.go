@@ -31,8 +31,10 @@ type Subscription struct {
 	Enabled        bool   `json:"enabled"`
 }
 
-func (c *ForwardNetworksClient) GetCloudAccounts(networkId string) (map[string]CloudAccount, error) {
+func (c *ForwardNetworksClient) GetCloudAccounts(networkId string, accountName string) (map[string]CloudAccount, error) {
     url := fmt.Sprintf("%s/api/networks/%s/cloudAccounts", c.BaseURL, networkId)
+    
+    cloudAccounts := make(map[string]CloudAccount)
 
     req, err := http.NewRequest(http.MethodGet, url, nil)
     if err != nil {
@@ -62,8 +64,6 @@ func (c *ForwardNetworksClient) GetCloudAccounts(networkId string) (map[string]C
     if err != nil {
         return nil, err
     }
-
-    cloudAccounts := make(map[string]CloudAccount)
 
     for _, cloudAccount := range cloudAccountsSlice {
         accountNames := []string{}
@@ -128,6 +128,14 @@ func (c *ForwardNetworksClient) GetCloudAccounts(networkId string) (map[string]C
         // Add the cloudAccount to the map using the account name as the key
         cloudAccounts[cloudAccount.Name] = cloudAccount
     }
-
+    	if accountName != "" {
+			if account, ok := cloudAccounts[accountName]; ok {
+				cloudAccounts = map[string]CloudAccount{
+					accountName: account,
+				}
+		} else {
+			return nil, fmt.Errorf("account with name %s not found", accountName)
+		}
+	}
     return cloudAccounts, nil
 }
