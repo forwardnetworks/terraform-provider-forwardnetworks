@@ -34,7 +34,7 @@ func Provider() *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"forwardnetworks_version": dataSourceVersion(),
 			"forwardnetworks_orgid":  dataSourceOrgId(),
-			"forwardnetworks_cloud":  dataSourceCloud(),
+			"forwardnetworks_cloud":  dataSourceCloudAccounts(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
