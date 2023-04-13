@@ -2,7 +2,7 @@
 
 This is a [Terraform](https://www.terraform.io)©
 [provider](https://developer.hashicorp.com/terraform/language/providers?page=providers)
-for Forward Networks. It relies on a Go client library at https://github.com/Juniper/forwardnetworks-go-sdk
+for Forward Networks. It relies on a Go client library at https://github.com/forwardnetworks/terraform-provider-forwardnetworks/forwardnetworks
 
 ## Getting Started
 
