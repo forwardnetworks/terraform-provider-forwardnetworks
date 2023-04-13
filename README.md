@@ -29,7 +29,7 @@ terraform {
 }
 
 provider "forwardnetworks" {
-  url = "<forwardnetworks-server-url>"
+  apphost = "<forwardnetworks-server-ip>"
 }
 ```
 
