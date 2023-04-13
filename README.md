@@ -48,11 +48,6 @@ export forwardnetworks_USER=<username>
 export forwardnetworks_PASS=<password>
 ```
 
-Alternatively, credentials can be embedded in the URL using HTTP basic
-authentication format (we don't actually *do* basic authentication, but the
-format is: `https://user:password@host`). Any special characters in the username
-and password must be URL-encoded when using this approach.
-
 ### Start configuring resources
 
 Full documentation for provider, resources and data sources can be found
