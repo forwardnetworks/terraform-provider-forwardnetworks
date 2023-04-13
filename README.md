@@ -15,7 +15,7 @@ Instructions for popular operating systems can be found [here](https://developer
 The terraform configuration must:
 - be named with a `.tf` file extension.
 - reference this provider by its global address.
-  *registry.terraform.io/Juniper/forwardnetworks* or just: *Juniper/forwardnetworks*.
+  *registry.terraform.io/forwardnetworks/forwardnetworks* or just: *forwardnetworks/forwardnetworks*.
 - include a provider configuration block which tells the provider where to
 find the forwardnetworks service.
 
