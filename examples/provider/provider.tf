@@ -1,6 +1,6 @@
-provider "forwardnetworks" {
-  username = "your_username"
-  password = "your_password"
-  apphost  = "fwd.app"
+provider "fwdnet" {
+  username = ""
+  password = ""
+  host     = "https://fwd.app"
   insecure = false
 }

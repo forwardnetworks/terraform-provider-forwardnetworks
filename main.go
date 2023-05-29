@@ -1,18 +1,17 @@
 package main
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+    "context"
+    "terraform-provider-fwdnet/fwdnet"
+
+    "github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
 
 // Provider documentation generation.
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name forwardnetworks
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name fwdnet
 
 func main() {
-	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: func() *schema.Provider {
-			return Provider()
-		},
-	})
+    providerserver.Serve(context.Background(), fwdnet.New, providerserver.ServeOpts{
+        Address: "registry.terraform.io/fracticated/fwdnet",
+    })
 }
-
